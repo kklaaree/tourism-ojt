@@ -45,7 +45,6 @@
 		list: RecordDisplayType[],
 		municipality: string
 	): RecordDisplayType[] => {
-		// If no municipality is selected, or 'Clear Selection' is selected, return the unfiltered list.
 		if (!municipality || municipality === 'Clear Selection') {
 			return list;
 		}
@@ -56,7 +55,6 @@
 		if (!detail || detail === 'Clear Selection') {
 			return list;
 		}
-		// FIX: Corrected the typo from record.detail to record.details
 		return list.filter((record) => record.detail === detail);
 	};
 
