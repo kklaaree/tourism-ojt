@@ -7,17 +7,32 @@
 	import { Searchbar } from '$lib/components/global/searchbar';
 	import { municipalities, details } from '$lib/shared/constants';
 	import { DatePicker } from '$lib/components/global/date-picker';
+	import type { RecordDisplayType } from '$lib/components/global/data-table/columns';
 
 	const records = getRecords();
 
 	let selectedType: string = 'All';
 	let selectedMunicipality: string = '';
 	let selectedDetail: string = '';
+	let searchTerm: string = '';
 
 	$: allRecords = records;
 	$: daytourRecords = records.filter((record) => record.type.toLowerCase() === 'daytour');
 	$: overnightRecords = records.filter((record) => record.type.toLowerCase() === 'overnight');
 	$: cusRecords = records.filter((record) => record.type.toLowerCase() === 'cus');
+
+	const filterBySearch = (list: RecordDisplayType[], term: string): RecordDisplayType[] => {
+		if (!term.trim()) {
+			return list;
+		}
+		const lowercasedTerm = term.toLowerCase();
+		return list.filter((record) => record.establishment.toLowerCase().includes(lowercasedTerm));
+	};
+
+	$: allFiltered = filterBySearch(allRecords, searchTerm);
+	$: daytourFiltered = filterBySearch(daytourRecords, searchTerm);
+	$: overnightFiltered = filterBySearch(overnightRecords, searchTerm);
+	$: cusFiltered = filterBySearch(cusRecords, searchTerm);
 </script>
 
 <Tabs.Root bind:value={selectedType} class="w-full py-2">
@@ -30,36 +45,36 @@
 	</Tabs.List>
 
 	<div class=" flex w-full flex-row justify-end gap-2">
-		<Searchbar />
+		<Searchbar bind:value={searchTerm} />
 		<Dropdown placeholder="Select Municipality" options={municipalities} />
 		<Dropdown bind:selectedValue={selectedDetail} options={details} placeholder="Select Status" />
 		<DatePicker />
 	</div>
 
 	<Tabs.Content value="All" class="w-full">
-		{#if allRecords && allRecords.length > 0}
-			<DataTable data={allRecords} {columns} />
+		{#if allFiltered && allFiltered.length > 0}
+			<DataTable data={allFiltered} {columns} />
 		{:else}
 			<p>No records to display.</p>
 		{/if}
 	</Tabs.Content>
 	<Tabs.Content value="Daytour" class="w-full">
-		{#if daytourRecords && daytourRecords.length > 0}
-			<DataTable data={daytourRecords} {columns} />
+		{#if daytourFiltered && daytourFiltered.length > 0}
+			<DataTable data={daytourFiltered} {columns} />
 		{:else}
 			<p>No records to display.</p>
 		{/if}
 	</Tabs.Content>
 	<Tabs.Content value="Overnight" class="w-full">
-		{#if overnightRecords && overnightRecords.length > 0}
-			<DataTable data={overnightRecords} {columns} />
+		{#if overnightFiltered && overnightFiltered.length > 0}
+			<DataTable data={overnightFiltered} {columns} />
 		{:else}
 			<p>No records to display.</p>
 		{/if}
 	</Tabs.Content>
 	<Tabs.Content value="CUS" class="w-full">
-		{#if cusRecords && cusRecords.length > 0}
-			<DataTable data={cusRecords} {columns} />
+		{#if cusFiltered && cusFiltered.length > 0}
+			<DataTable data={cusFiltered} {columns} />
 		{:else}
 			<p>No records to display.</p>
 		{/if}
