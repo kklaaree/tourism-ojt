@@ -5,8 +5,8 @@ services:
     ports:
       - 5432:5432
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_USER: ojt
+      POSTGRES_PASSWORD: ojt
       POSTGRES_DB: local
     volumes:
       - pgdata:/var/lib/postgresql/data
