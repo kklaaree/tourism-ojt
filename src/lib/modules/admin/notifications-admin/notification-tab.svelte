@@ -16,6 +16,9 @@
 	let selectedDetail: string = '';
 	let searchTerm: string = '';
 
+	const municipalitiesWithOptions = ['Clear Selection', ...municipalities];
+	const detailsWithOptions = ['Clear Selection', ...details];
+
 	$: allRecords = records;
 	$: daytourRecords = records.filter((record) => record.type.toLowerCase() === 'daytour');
 	$: overnightRecords = records.filter((record) => record.type.toLowerCase() === 'overnight');
@@ -29,10 +32,50 @@
 		return list.filter((record) => record.establishment.toLowerCase().includes(lowercasedTerm));
 	};
 
-	$: allFiltered = filterBySearch(allRecords, searchTerm);
-	$: daytourFiltered = filterBySearch(daytourRecords, searchTerm);
-	$: overnightFiltered = filterBySearch(overnightRecords, searchTerm);
-	$: cusFiltered = filterBySearch(cusRecords, searchTerm);
+	// const filterByMunicipalityAndClear = (
+	// 	list: RecordDisplayType[],
+	// 	municipality: string
+	// ): RecordDisplayType[] => {
+	// 	if (!municipality) {
+	// 		return list;
+	// 	}
+	// 	return list.filter((record) => record.municipality === municipality);
+	// };
+	const filterByMunicipality = (
+		list: RecordDisplayType[],
+		municipality: string
+	): RecordDisplayType[] => {
+		// If no municipality is selected, or 'Clear Selection' is selected, return the unfiltered list.
+		if (!municipality || municipality === 'Clear Selection') {
+			return list;
+		}
+		return list.filter((record) => record.municipality === municipality);
+	};
+
+	const filterByDetail = (list: RecordDisplayType[], detail: string): RecordDisplayType[] => {
+		if (!detail || detail === 'Clear Selection') {
+			return list;
+		}
+		// FIX: Corrected the typo from record.detail to record.details
+		return list.filter((record) => record.detail === detail);
+	};
+
+	$: allFinalRecords = filterByDetail(
+		filterByMunicipality(filterBySearch(allRecords, searchTerm), selectedMunicipality),
+		selectedDetail
+	);
+	$: daytourFinalRecords = filterByDetail(
+		filterByMunicipality(filterBySearch(daytourRecords, searchTerm), selectedMunicipality),
+		selectedDetail
+	);
+	$: overnightFinalRecords = filterByDetail(
+		filterByMunicipality(filterBySearch(overnightRecords, searchTerm), selectedMunicipality),
+		selectedDetail
+	);
+	$: cusFinalRecords = filterByDetail(
+		filterByMunicipality(filterBySearch(cusRecords, searchTerm), selectedMunicipality),
+		selectedDetail
+	);
 </script>
 
 <Tabs.Root bind:value={selectedType} class="w-full py-2">
@@ -46,35 +89,43 @@
 
 	<div class=" flex w-full flex-row justify-end gap-2">
 		<Searchbar bind:value={searchTerm} />
-		<Dropdown placeholder="Select Municipality" options={municipalities} />
-		<Dropdown bind:selectedValue={selectedDetail} options={details} placeholder="Select Status" />
+		<Dropdown
+			placeholder="Select Municipality"
+			options={municipalitiesWithOptions}
+			bind:selectedValue={selectedMunicipality}
+		/>
+		<Dropdown
+			placeholder="Select Status"
+			options={detailsWithOptions}
+			bind:selectedValue={selectedDetail}
+		/>
 		<DatePicker />
 	</div>
 
 	<Tabs.Content value="All" class="w-full">
-		{#if allFiltered && allFiltered.length > 0}
-			<DataTable data={allFiltered} {columns} />
+		{#if allFinalRecords && allFinalRecords.length > 0}
+			<DataTable data={allFinalRecords} {columns} />
 		{:else}
 			<p>No records to display.</p>
 		{/if}
 	</Tabs.Content>
 	<Tabs.Content value="Daytour" class="w-full">
-		{#if daytourFiltered && daytourFiltered.length > 0}
-			<DataTable data={daytourFiltered} {columns} />
+		{#if daytourFinalRecords && daytourFinalRecords.length > 0}
+			<DataTable data={daytourFinalRecords} {columns} />
 		{:else}
 			<p>No records to display.</p>
 		{/if}
 	</Tabs.Content>
 	<Tabs.Content value="Overnight" class="w-full">
-		{#if overnightFiltered && overnightFiltered.length > 0}
-			<DataTable data={overnightFiltered} {columns} />
+		{#if overnightFinalRecords && overnightFinalRecords.length > 0}
+			<DataTable data={overnightFinalRecords} {columns} />
 		{:else}
 			<p>No records to display.</p>
 		{/if}
 	</Tabs.Content>
 	<Tabs.Content value="CUS" class="w-full">
-		{#if cusFiltered && cusFiltered.length > 0}
-			<DataTable data={cusFiltered} {columns} />
+		{#if cusFinalRecords && cusFinalRecords.length > 0}
+			<DataTable data={cusFinalRecords} {columns} />
 		{:else}
 			<p>No records to display.</p>
 		{/if}

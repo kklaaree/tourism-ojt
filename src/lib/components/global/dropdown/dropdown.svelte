@@ -17,9 +17,12 @@
 
 	const currentButtonText = $derived(selectedValue || placeholder);
 
-	// This function will be called by the button inside the dropdown item
 	function handleSelect(option: string) {
-		selectedValue = option;
+		if (option === 'Clear Selection') {
+			selectedValue = '';
+		} else {
+			selectedValue = option;
+		}
 		isDropdownOpen = false;
 	}
 </script>
@@ -37,10 +40,10 @@
 	<DropdownMenu.Content align="end" class="w-56">
 		<DropdownMenu.Group>
 			{#each options as option (option)}
-				<DropdownMenu.Item>
+				<DropdownMenu.Item class="p-0">
 					<button
 						onclick={() => handleSelect(option)}
-						class="w-full border-none bg-transparent p-0 text-left hover:bg-muted focus:bg-muted"
+						class="w-full border-none bg-transparent p-2 text-left hover:bg-muted focus:bg-muted"
 					>
 						{option}
 					</button>
