@@ -3,20 +3,23 @@
 
 	export let detail: 'Updated' | 'Created' | 'Deleted';
 	export let variant: 'default' | 'secondary' | 'destructive' | 'outline' = 'default';
+	export let textColorClass: string = '';
 
 	switch (detail) {
 		case 'Updated':
-			variant = 'secondary';
+			variant = 'default';
+			textColorClass = 'text-blue-300';
 			break;
 		case 'Created':
 			variant = 'default';
+			textColorClass = 'text-green-300';
 			break;
-		case 'Deleted':
-			variant = 'destructive';
+		default:
+			variant = 'default';
 			break;
 	}
 </script>
 
-<Badge {variant}>
+<Badge {variant} class={textColorClass}>
 	{detail}
 </Badge>
