@@ -74,7 +74,6 @@
 		<Tabs.Trigger value="Daytour">Daytour</Tabs.Trigger>
 		<Tabs.Trigger value="Overnight">Overnight</Tabs.Trigger>
 		<Tabs.Trigger value="CUS">CUS</Tabs.Trigger>
-		<Tabs.Trigger value="stakeholder">Stakeholders</Tabs.Trigger>
 	</Tabs.List>
 
 	<div class=" flex w-full flex-row justify-end gap-2">
@@ -119,8 +118,5 @@
 		{:else}
 			<p>No records to display.</p>
 		{/if}
-	</Tabs.Content>
-	<Tabs.Content value="stakeholder" class="w-full">
-		<p>No records to display.</p>
 	</Tabs.Content>
 </Tabs.Root>
