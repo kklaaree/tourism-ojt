@@ -79,21 +79,27 @@
 	</Table.Root>
 </div>
 
-<div class="flex items-center justify-end space-x-2 py-4">
-	<Button
-		variant="outline"
-		size="sm"
-		onclick={() => table.previousPage()}
-		disabled={!table.getCanPreviousPage()}
-	>
-		Previous
-	</Button>
-	<Button
-		variant="outline"
-		size="sm"
-		onclick={() => table.nextPage()}
-		disabled={!table.getCanNextPage()}
-	>
-		Next
-	</Button>
+<div class="flex w-full flex-grow gap-4">
+	<div class="flex items-center justify-start space-x-2 py-4">
+		<Button
+			variant="outline"
+			size="sm"
+			onclick={() => table.previousPage()}
+			disabled={!table.getCanPreviousPage()}
+		>
+			Previous
+		</Button>
+		<Button
+			variant="outline"
+			size="sm"
+			onclick={() => table.nextPage()}
+			disabled={!table.getCanNextPage()}
+		>
+			Next
+		</Button>
+	</div>
+	<div class="flex w-full items-center justify-end text-sm font-medium">
+		Page {table.getState().pagination.pageIndex + 1} of
+		{table.getPageCount()}
+	</div>
 </div>

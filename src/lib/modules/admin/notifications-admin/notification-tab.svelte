@@ -8,6 +8,7 @@
 	import { municipalities, details } from '$lib/shared/constants';
 	import { DatePicker } from '$lib/components/global/date-picker';
 	import type { RecordDisplayType } from '$lib/components/global/data-table/columns';
+	import { CalendarDate, type DateValue } from '@internationalized/date';
 
 	const records = getRecords();
 
@@ -32,15 +33,6 @@
 		return list.filter((record) => record.establishment.toLowerCase().includes(lowercasedTerm));
 	};
 
-	// const filterByMunicipalityAndClear = (
-	// 	list: RecordDisplayType[],
-	// 	municipality: string
-	// ): RecordDisplayType[] => {
-	// 	if (!municipality) {
-	// 		return list;
-	// 	}
-	// 	return list.filter((record) => record.municipality === municipality);
-	// };
 	const filterByMunicipality = (
 		list: RecordDisplayType[],
 		municipality: string
